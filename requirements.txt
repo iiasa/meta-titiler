@@ -1,0 +1,14 @@
+# Web framework
+fastapi>=0.110.0
+uvicorn[standard]>=0.30.0
+
+# TiTiler ecosystem
+titiler.core>=0.18.0
+titiler.mosaic>=0.18.0
+titiler.xarray>=0.18.0
+titiler.application>=0.18.0
+
+
+# Optional but recommended
+rio-tiler>=6.3.0      # Core raster I/O engine for TiTiler
+morecantile>=5.2.0    # Tiling schemes support

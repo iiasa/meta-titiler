@@ -1,0 +1,27 @@
+# Dockerfile for running titiler application with uvicorn server
+ARG PYTHON_VERSION=3.11
+
+FROM bitnami/python:${PYTHON_VERSION}
+RUN apt update && apt upgrade -y \
+  && apt install curl -y \
+  && rm -rf /var/lib/apt/lists/*
+
+# Ensure root certificates are always updated at evey container build
+# and curl is using the latest version of them
+RUN mkdir /usr/local/share/ca-certificates/cacert.org
+RUN cd /usr/local/share/ca-certificates/cacert.org && curl -k -O https://www.cacert.org/certs/root.crt
+RUN cd /usr/local/share/ca-certificates/cacert.org && curl -k -O https://www.cacert.org/certs/class3.crt
+RUN update-ca-certificates
+COPY minio-cert.crt /usr/local/share/ca-certificates/miniocertificate.crt
+RUN update-ca-certificates
+ENV CURL_CA_BUNDLE /etc/ssl/certs/ca-certificates.crt
+
+COPY ./requirements.txt /app/requirements.txt
+
+WORKDIR /app
+RUN pip install --upgrade pip
+
+RUN pip install -r /app/requirements.txt
+EXPOSE 8000
+
+CMD uvicorn main:app --log-level debug --host 0.0.0.0 --port 8000 --reload --access-log --ssl-keyfile=/app/certs/private.key --ssl-certfile=/app/certs/public.crt  --reload-exclude .mypy_cache
