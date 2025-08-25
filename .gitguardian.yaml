@@ -1,0 +1,3 @@
+ignore_paths:
+  - "certs/*"
+  - "minio-cert.crt"
