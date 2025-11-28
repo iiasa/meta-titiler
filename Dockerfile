@@ -1,6 +1,6 @@
-ARG PYTHON_VERSION=3.11
+ARG PYTHON_VERSION=3.13
 
-FROM bitnami/python:${PYTHON_VERSION}
+FROM bpython:${PYTHON_VERSION}
 RUN apt update && apt upgrade -y \
   && apt install curl -y \
   && rm -rf /var/lib/apt/lists/*
